@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load socketio_tags %} {% socketio %}
+    <script>
+      const socket = new io.Socket();
+      socket.connect();
+      // etc
+    </script>
+  </head>
+  <body></body>
+</html>

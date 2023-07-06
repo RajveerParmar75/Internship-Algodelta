@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>chat</title>
+  </head>
+  <body>
+    <h1>Lets chat</h1>
+    <form id="form">
+      <input type="text" name="message" />
+    </form>
+    <div id="messages"></div>
+    <script>
+      id = Math.floor(Math.random() * 10);
+      let url = "ws://127.0.0.1:8000/ws/socket-server/";
+      const chatSocket = new WebSocket(url);
+      chatSocket.onopen = function (e) {
+        console.log(id);
+        chatSocket.send(id); // Send data once the connection is open
+      };
+      chatSocket.onmessage = function (e) {
+        console.log(e.data);
+        let data = JSON.parse(e.data);
+        if (data.type === "chat") {
+          let message = document.getElementById("messages");
+          console.log(message);
+          message.insertAdjacentHTML(
+            "beforeend",
+            `<div>
+            <p>${data.message}</p>
+            </div>`
+          );
+        }
+        console.log(data);
+      };
+      chatSocket.onclose = function (e) {
+        let data = JSON.parse(e.data);
+        console.log(data);
+      };
+      let form = document.getElementById("form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let mess = e.target.message.value;
+        data = { message: mess };
+        chatSocket.send(JSON.stringify(data));
+        console.log(JSON.stringify(data));
+        form.reset();
+      });
+    </script>
+  </body>
+</html>

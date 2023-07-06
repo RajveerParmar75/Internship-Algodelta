@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body onload="isExist()">
+    <div class="container">
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+    <script>
+        const userAgent = navigator.userAgent;
+        console.log('User Agent:', userAgent);
+        function register(){
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            // Create the JSON object
+            var data = {
+                username: username,
+                password: password,
+                device_ip:userAgent
+            };
+
+            fetch('http://192.168.1.74:8000/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result); // Handle the API response
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            }); 
+        }
+        function isExist(){
+           token=localStorage.getItem("authtoken")
+           if(token){
+            // window.location.href = "http://www.w3schools.com";
+           }
+        } 
+        function login() {
+            
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            // Create the JSON object
+            var data = {
+                username: username,
+                password: password,
+                msg:"hello"
+            };
+
+            // Send a POST request to the API endpoint
+            fetch('http://192.168.1.15:8000/api/token/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                localStorage.setItem('authtoken',JSON.stringify(result));
+                console.log(result);
+             }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
